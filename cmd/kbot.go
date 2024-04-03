@@ -20,8 +20,9 @@ var (
 
 // rootCmd represents the base command when called without any subcommands
 var kbotCmd = &cobra.Command{
-	Use:   "kbot",
-	Short: "A brief description of your application",
+	Use:     "kbot",
+	Aliases: []string{"start"},
+	Short:   "A brief description of your application",
 	Long: `A longer description that spans multiple lines and likely contains
 examples and usage of using your application. For example:
 
@@ -30,7 +31,7 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		fmt.Printf("kbot %s standart", appVersion)
+		fmt.Printf("kbot %s started", appVersion)
 
 		kbot, err := telebot.NewBot(telebot.Settings{
 			URL:    "",
@@ -46,6 +47,13 @@ to quickly create a Cobra application.`,
 		kbot.Handle(telebot.OnText, func(m telebot.Context) error {
 
 			log.Print(m.Message().Payload, m.Text())
+			payload := m.Message().Payload
+
+			switch payload {
+			case "hello":
+				err = m.Send(fmt.Sprintf("Hello I'm Kbot %s!", appVersion))
+
+			}
 
 			return err
 
